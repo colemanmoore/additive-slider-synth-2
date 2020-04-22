@@ -1,26 +1,23 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React from 'react'
+import './App.css'
+import Slider from './Slider'
+import Synth from './Synth'
+
+Synth.init(16)
 
 function App() {
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <div className="spectrumControls">
+        {Synth.voices().map(function(v) {
+          return <Slider voice={v} />
+        })}
+      </div>
+      <div className="hint">Double-click a slider to turn on a harmonic</div>
+      <div className="hint">Press a key from the middle row of your keyboard: ASDFGHJKL
+      </div>
     </div>
-  );
+  )
 }
 
-export default App;
+export default App

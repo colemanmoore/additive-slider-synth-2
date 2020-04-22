@@ -1,0 +1,22 @@
+.Slider {
+  height: 300px;
+  width: 50px;
+  float: left;
+  margin-right: 2px;
+}
+
+.SliderBody {
+  /*background: #f49;*/
+  background-color: #2a282a;
+  transition: background 0.1s;
+  border: black 1px solid;
+  width: 40px;
+  height: 300px;
+  position: relative;
+  left: 5px;
+  cursor: grab;
+}
+
+.Sparkling {
+  background: #b3dbac;
+}
