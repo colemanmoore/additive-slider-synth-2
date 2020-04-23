@@ -1,0 +1,22 @@
+{
+  "files": {
+    "main.css": "/additive-slider-synth-2/static/css/main.210b303e.chunk.css",
+    "main.js": "/additive-slider-synth-2/static/js/main.8a923453.chunk.js",
+    "main.js.map": "/additive-slider-synth-2/static/js/main.8a923453.chunk.js.map",
+    "runtime-main.js": "/additive-slider-synth-2/static/js/runtime-main.0b6a67d5.js",
+    "runtime-main.js.map": "/additive-slider-synth-2/static/js/runtime-main.0b6a67d5.js.map",
+    "static/js/2.fc204ce6.chunk.js": "/additive-slider-synth-2/static/js/2.fc204ce6.chunk.js",
+    "static/js/2.fc204ce6.chunk.js.map": "/additive-slider-synth-2/static/js/2.fc204ce6.chunk.js.map",
+    "index.html": "/additive-slider-synth-2/index.html",
+    "precache-manifest.a24dbfe69c445b75af11be0906ea5534.js": "/additive-slider-synth-2/precache-manifest.a24dbfe69c445b75af11be0906ea5534.js",
+    "service-worker.js": "/additive-slider-synth-2/service-worker.js",
+    "static/css/main.210b303e.chunk.css.map": "/additive-slider-synth-2/static/css/main.210b303e.chunk.css.map",
+    "static/js/2.fc204ce6.chunk.js.LICENSE.txt": "/additive-slider-synth-2/static/js/2.fc204ce6.chunk.js.LICENSE.txt"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.0b6a67d5.js",
+    "static/js/2.fc204ce6.chunk.js",
+    "static/css/main.210b303e.chunk.css",
+    "static/js/main.8a923453.chunk.js"
+  ]
+}
