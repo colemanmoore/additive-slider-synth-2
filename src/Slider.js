@@ -1,24 +1,42 @@
-import React, { useEffect, useContext, useState } from 'react'
+import React, { useEffect, useContext } from 'react'
 import './Slider.css'
 import SynthContext from './SynthContext'
+import useSlider from './useSlider'
 
-function Slider({ pid }) {
+const sliderHeight = 300
+
+function Slider({ pid, noteOn }) {
 
   const synth = useContext(SynthContext)
   const voice = synth.voice(pid)
 
-  const [freq, setFreq] = useState(voice.osc.frequency.value)
-  const [gain, setGain] = useState(voice.vca.gain.value)
+  const [meterLevel, setMeterLevel, sliderOffset, handleMouseDown, handleMouseUp, handleDoubleClick]
+    = useSlider({ sliderHeight, meterLevel: voice.vca.gain.value })
 
-  const handleDblClick = () => {
-    setGain(0.5)
-    synth.voiceGain(pid, 0.5)
-  }
+  useEffect(() => {
+    if(!isNaN(meterLevel)) {
+      synth.voiceGain(pid, meterLevel)
+    }
+  }, [meterLevel])
+
+  useEffect(() => {
+    synth.voiceDetune(pid, sliderOffset)
+  }, [sliderOffset])
+
+  const backgroundColor = () => noteOn ? '#b3dbac' : '#ff4499'
 
   return (
-    <div className="Slider" onDoubleClick={handleDblClick}>
-      <div className="SliderBody">
-        <div className="Pink" />
+    <div
+      className="Slider"
+      onMouseDown={handleMouseDown}
+      onMouseUp={handleMouseUp}
+      onDoubleClick={handleDoubleClick}
+    >
+      <div className="SliderBody" style={{left: `${sliderOffset}px`}}>
+        <div
+          className="LevelMeter"
+          style={{height: `${meterLevel * sliderHeight}px`, background: backgroundColor }}
+        />
       </div>
     </div>
   )

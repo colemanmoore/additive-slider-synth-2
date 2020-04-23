@@ -7,19 +7,18 @@
 
 .SliderBody {
   background-color: #2a282a;
-  transition: background 0.1s;
   border: black 1px solid;
   width: 40px;
   height: 300px;
   position: relative;
   left: 5px;
   cursor: grab;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
 }
 
-.Pink {
-  background: #ff4499;
-}
-
-.Sparkling {
-  background: #b3dbac;
+.LevelMeter {
+  background-color: #ff4499;
+  transition: height 0.08s;
 }

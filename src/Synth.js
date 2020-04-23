@@ -2,6 +2,7 @@
 
 class AdditiveSynth {
 
+  OFF = 'OFF'
   ctx = null
   voices = {}
   numberOfVoices = 0
@@ -18,7 +19,7 @@ class AdditiveSynth {
 
       const osc = this.ctx.createOscillator()
       osc.type = 'sine'
-      osc.frequency.value = 200 * (pid+1)
+      osc.frequency.value = 0
       osc.start()
       osc.connect(vca)
 
@@ -35,19 +36,27 @@ class AdditiveSynth {
     return this.voices[pid]
   }
 
-  changeMasterGain(newVal) {
-    this.masterGain.gain.value = Math.min(Math.max(newVal, 0.0), 1.0)
+  changeMasterGain(value) {
+    this.masterGain.gain.cancelScheduledValues(this.ctx.currentTime)
+    this.masterGain.gain.setTargetAtTime(value, this.ctx.currentTime, 0.2)
   }
 
   noteChange(freq) {
-    console.log(`noteChange ${freq}`)
-    Object.keys(this.voices).forEach(pid => {
-      this.voice(pid).osc.frequency.value = freq * (pid + 1)
+    Object.keys(this.voices).filter(pidString => !isNaN(parseInt(pidString))).forEach(pid => {
+      this.voice(pid).osc.frequency.value = freq * (parseInt(pid) + 1)
     })
   }
 
   keyboardInput(keyCode) {
-    this.noteChange(this.keyToFrequency(keyCode))
+    if (keyCode === this.OFF) {
+      this.changeMasterGain(0.0)
+      return
+    }
+
+    if (this.keyToFrequency(keyCode)) {
+      this.noteChange(this.keyToFrequency(keyCode) / 4)
+      this.changeMasterGain(1.0)
+    }
   }
 
   voiceGain(pid, val) {
@@ -58,9 +67,9 @@ class AdditiveSynth {
 
   voiceDetune(pid, cents) {
     if (this.voices[pid]) {
-      this.voices[pid].osc.detune.value = cents
+      this.voices[pid].osc.detune.value = cents*5
     }
-  }
+  }a
 
   keyToFrequency(keyCode) {
 
@@ -68,7 +77,7 @@ class AdditiveSynth {
       65: 'a',
       83: 'd',
       68: 'e',
-      70: 'f',
+      70: 'fsh',
       71: 'g',
       72: 'a',
       74: 'b',
