@@ -7,15 +7,3 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
-
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
-}
-
-.hint {
-  color: #f49;
-  font-family: sans-serif;
-  letter-spacing: 3px;
-  font-size: 2rem;
-}

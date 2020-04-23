@@ -10,3 +10,10 @@
   margin: 100px auto;
   position: relative;
 }
+
+.hint {
+  color: #f49;
+  font-family: sans-serif;
+  letter-spacing: 3px;
+  font-size: 2rem;
+}
