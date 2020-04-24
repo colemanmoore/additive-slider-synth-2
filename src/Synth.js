@@ -54,7 +54,7 @@ class AdditiveSynth {
     }
 
     if (this.keyToFrequency(keyCode)) {
-      this.noteChange(this.keyToFrequency(keyCode) / 4)
+      this.noteChange(this.keyToFrequency(keyCode) / 2)
       this.changeMasterGain(1.0)
     }
   }

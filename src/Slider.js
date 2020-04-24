@@ -23,8 +23,6 @@ function Slider({ pid, noteOn }) {
     synth.voiceDetune(pid, sliderOffset)
   }, [sliderOffset])
 
-  const backgroundColor = () => noteOn ? '#b3dbac' : '#ff4499'
-
   return (
     <div
       className="Slider"
@@ -35,7 +33,7 @@ function Slider({ pid, noteOn }) {
       <div className="SliderBody" style={{left: `${sliderOffset}px`}}>
         <div
           className="LevelMeter"
-          style={{height: `${meterLevel * sliderHeight}px`, background: backgroundColor }}
+          style={{height: `${meterLevel * sliderHeight}px`, background: noteOn ? '#b3dbac' : '#ff4499' }}
         />
       </div>
     </div>

@@ -1,13 +1,13 @@
-import React, {useContext, useRef, useEffect, useState} from 'react'
+import React, { useContext, useRef, useEffect } from 'react'
 import './App.css'
 import Slider from './Slider'
 import SynthContext from './SynthContext'
+import useSparkle from './useSparkle'
 
 function App() {
   const synth = useContext(SynthContext)
   const mainRef = useRef(null)
-
-  const [noteOn, setNoteOn] = useState(false)
+  const [sparkling, setNoteOn] = useSparkle()
 
   useEffect(() => {
     if (synth.masterGain > 0) {
@@ -26,10 +26,12 @@ function App() {
     //   setNothingPlayedYet(false)
     // }
     synth.keyboardInput(keyCode)
+    setNoteOn(true)
   }
 
   const handleKeyUp = () => {
     synth.keyboardInput(synth.OFF)
+    setNoteOn(false)
   }
 
   return (
@@ -42,7 +44,7 @@ function App() {
     >
       <div className="spectrumControls">
         {Object.keys(synth.voices).map(pid => (
-          <Slider key={pid} pid={pid} noteOn={noteOn} />
+          <Slider key={pid} pid={pid} noteOn={sparkling} />
         ))}
       </div>
       <div className="hint">Double-click a slider to turn on a harmonic</div>
