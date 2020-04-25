@@ -20,7 +20,6 @@ function App() {
       <SynthContext.Provider value={synth}>
         <Interface />
       </SynthContext.Provider>
-      <div style={Hint}>press a key: ASDFGHJKL</div>
     </div>
   )
 }
@@ -30,15 +29,6 @@ const Container = {
   display: 'flex',
   flexDirection: 'column',
   padding: '50px'
-}
-
-const Hint = {
-  color: '#f49',
-  fontFamily: 'sans-serif',
-  letterSpacing: '3px',
-  fontSize: '1.8rem',
-  lineHeight: '2.15rem',
-  marginBottom: '0.25rem'
 }
 
 export default App

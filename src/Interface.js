@@ -2,6 +2,7 @@ import React, { useState, useContext, useEffect, useRef } from 'react'
 import Slider from './Slider'
 import SynthContext from './SynthContext'
 import useSparkle from './useSparkle'
+import { pink, green, letters } from './constant'
 
 const Interface = () => {
 
@@ -10,6 +11,8 @@ const Interface = () => {
   const mainRef = useRef(null)
   const [voices, setVoices] = useState([])
   const [waveform, setWaveform] = useState(synth.waveform)
+  const [keysElement, setKeysElement] = useState(null)
+  const [currentNote, setCurrentNote] = useState(null)
 
   useEffect(() => {
     mainRef.current.focus() // so that key events are caught
@@ -24,15 +27,41 @@ const Interface = () => {
       setNoteOn(true)
       setTimeout(() => setNoteOn(false), 100)
     }
-  }, [synth.masterGain])
+  }, [synth, synth.masterGain, setNoteOn])
+
+  useEffect(() => {
+    if (currentNote) {
+      setKeysElement(
+        <strong style={{ color: pink }}>
+          {Array.from(letters).map(letter =>
+            letter === currentNote ? <span key={letter} style={{ color: green }}>{letter}</span> : letter
+          )}
+        </strong>
+      )
+    } else {
+      setKeysElement(<strong style={{ color: pink }}>{letters}</strong>)
+    }
+  }, [currentNote])
 
   const handleKeyDown = ({ keyCode }) => {
     synth.keyboardInput(keyCode)
+    setCurrentNote({
+      65: 'A',
+      83: 'S',
+      68: 'D',
+      70: 'F',
+      71: 'G',
+      72: 'H',
+      74: 'J',
+      75: 'K',
+      76: 'L'
+    }[keyCode] || null)
     setNoteOn(true)
   }
 
   const handleKeyUp = () => {
     synth.keyboardInput(synth.OFF)
+    setCurrentNote(null)
     setNoteOn(false)
   }
 
@@ -56,8 +85,9 @@ const Interface = () => {
       </div>
 
       <div style={Console}>
-        <span style={Button} onClick={changeWave}>{synth.waveform}</span>
+        <span style={Button} onClick={changeWave}>{waveform}</span>
       </div>
+      <div style={Hint}>press a key: {keysElement}</div>
     </div>
   )
 }
@@ -83,6 +113,15 @@ const Button = {
   padding: '10px 20px',
   borderRadius: '8px',
   cursor: 'pointer'
+}
+
+const Hint = {
+  color: '#f49',
+  fontFamily: 'sans-serif',
+  letterSpacing: '3px',
+  fontSize: '1.8rem',
+  lineHeight: '2.15rem',
+  marginBottom: '0.25rem'
 }
 
 export default Interface

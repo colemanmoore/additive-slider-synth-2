@@ -1,11 +1,9 @@
 import React, { useState, useEffect, useContext } from 'react'
 import SynthContext from './SynthContext'
 import useSlider from './useSlider'
+import { pink, green, sliderBodyColor } from './constant'
 
 const sliderHeight = 300
-const sliderBodyColor = '#2a282a'
-const pink = '#ff4499'
-const green = '#b3dbac'
 
 function Slider({ pid, noteOn }) {
 
@@ -23,11 +21,11 @@ function Slider({ pid, noteOn }) {
     if(!isNaN(meterLevel)) {
       synth.voiceGain(pid, meterLevel)
     }
-  }, [meterLevel, synth])
+  }, [meterLevel, synth, pid])
 
   useEffect(() => {
     synth.voiceDetune(pid, sliderOffset)
-  }, [sliderOffset, synth])
+  }, [sliderOffset, synth, pid])
 
   useEffect(() => {
     setSliderColor(noteOn ? green : pink)
