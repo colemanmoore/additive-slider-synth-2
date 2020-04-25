@@ -38,7 +38,6 @@ const useSlider = ({ sliderHeight = 100, initialLevel = 0.0 }) => {
 
   return [
     meterLevel,
-    setMeterLevel,
     sliderOffset,
     handleMouseDown,
     handleMouseUp,

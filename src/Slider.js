@@ -1,43 +1,79 @@
-import React, { useEffect, useContext } from 'react'
-import './Slider.css'
+import React, { useState, useEffect, useContext } from 'react'
 import SynthContext from './SynthContext'
 import useSlider from './useSlider'
 
 const sliderHeight = 300
+const sliderBodyColor = '#2a282a'
+const pink = '#ff4499'
+const green = '#b3dbac'
 
 function Slider({ pid, noteOn }) {
 
   const synth = useContext(SynthContext)
   const voice = synth.voice(pid)
 
-  const [meterLevel, setMeterLevel, sliderOffset, handleMouseDown, handleMouseUp, handleDoubleClick]
-    = useSlider({ sliderHeight, meterLevel: voice.vca.gain.value })
+  const [sliderColor, setSliderColor] = useState(pink)
+
+  const [meterLevel, sliderOffset, handleMouseDown, handleMouseUp, handleDoubleClick] = useSlider({
+    sliderHeight,
+    initialLevel: !voice ? 0.0 : voice.vca.gain.value
+  })
 
   useEffect(() => {
     if(!isNaN(meterLevel)) {
       synth.voiceGain(pid, meterLevel)
     }
-  }, [meterLevel])
+  }, [meterLevel, synth])
 
   useEffect(() => {
     synth.voiceDetune(pid, sliderOffset)
-  }, [sliderOffset])
+  }, [sliderOffset, synth])
+
+  useEffect(() => {
+    setSliderColor(noteOn ? green : pink)
+  }, [noteOn])
 
   return (
     <div
-      className="Slider"
+      style={Container}
       onMouseDown={handleMouseDown}
       onMouseUp={handleMouseUp}
-      onDoubleClick={handleDoubleClick}
+      onDoubleClick={() => { synth.resumeAudio(); handleDoubleClick() }}
     >
-      <div className="SliderBody" style={{left: `${sliderOffset}px`}}>
+      <div style={{
+        ...Body,
+        left: `${sliderOffset}px`
+      }}>
         <div
-          className="LevelMeter"
-          style={{height: `${meterLevel * sliderHeight}px`, background: noteOn ? '#b3dbac' : '#ff4499' }}
+          style={{
+            height: `${meterLevel * sliderHeight}px`,
+            background: sliderColor,
+            transition: 'height 0.08s'
+          }}
         />
       </div>
     </div>
   )
+}
+
+const Container = {
+  height: `${sliderHeight}px`,
+  width: '50px',
+  float: 'left',
+  marginRight: '2px'
+}
+
+const Body = {
+  backgroundColor: sliderBodyColor,
+  border: 'black 1px solid',
+  width: '40px',
+  height: `${sliderHeight}px`,
+  position: 'relative',
+  left: '5px',
+  cursor: 'grab',
+  display: 'flex',
+  flexDirection: 'column',
+  justifyContent: 'flex-end'
 }
 
 export default Slider

@@ -3,21 +3,48 @@
 class AdditiveSynth {
 
   OFF = 'OFF'
-  ctx = null
+  audioContext = null
   voices = {}
   numberOfVoices = 0
+  voicesConnected = false
+  waveform = null
 
-  constructor(numberOfVoices) {
-    this.ctx = new (window.AudioContext || window.webkitAudioContext)()
-    this.masterGain = this.ctx.createGain()
+  constructor({ numberOfVoices = 12, waveform = 'sine' }) {
     this.numberOfVoices = numberOfVoices
+    this.waveform = waveform
+  }
 
-    for (let pid = 0; pid < numberOfVoices; pid++) {
-      const vca = this.ctx.createGain()
-      vca.gain.value = 0.0
+  resumeAudio() {
+
+    if (!window.AudioContext && !window.webkitAudioContext) {
+      console.error('Browser does not support audio context')
+      this.voicesConnected = false
+      return
+    }
+
+    if (!this.audioContext) {
+      console.log('creating audio context...')
+      this.audioContext = new (window.AudioContext || window.webkitAudioContext)()
+      this.masterGain = this.audioContext.createGain()
+    } else if (this.audioContext.state === 'suspended') {
+      console.log('resuming audio context...')
+      this.audioContext.resume()
+    }
+
+    if (!this.voicesConnected) {
+      this.connectAllVoices()
+    }
+  }
+
+  connectAllVoices() {
+    this.masterGain.disconnect()
+
+    for (let pid = 0; pid < this.numberOfVoices; pid++) {
+      const vca = this.audioContext.createGain()
+      vca.gain.value = (pid === 0 ? 0.5 : 0.0)
       vca.connect(this.masterGain)
 
-      const osc = this.ctx.createOscillator()
+      const osc = this.audioContext.createOscillator()
       osc.type = 'sine'
       osc.frequency.value = 0
       osc.start()
@@ -29,7 +56,20 @@ class AdditiveSynth {
       }
     }
 
-    this.masterGain.connect(this.ctx.destination)
+    this.masterGain.connect(this.audioContext.destination)
+    this.voicesConnected = true
+  }
+
+  disconnectAllVoices() {
+    for (let pid = 0; pid < this.numberOfVoices; pid++) {
+      const { osc, vca } = this.voices[pid]
+      vca.disconnect(this.masterGain)
+      osc.disconnect(vca)
+      osc.stop()
+    }
+
+    this.voices = {}
+    this.voicesConnected = false
   }
 
   voice(pid) {
@@ -37,8 +77,8 @@ class AdditiveSynth {
   }
 
   changeMasterGain(value) {
-    this.masterGain.gain.cancelScheduledValues(this.ctx.currentTime)
-    this.masterGain.gain.setTargetAtTime(value, this.ctx.currentTime, 0.2)
+    this.masterGain.gain.cancelScheduledValues(this.audioContext.currentTime)
+    this.masterGain.gain.setTargetAtTime(value, this.audioContext.currentTime, 0.2)
   }
 
   noteChange(freq) {
@@ -69,7 +109,18 @@ class AdditiveSynth {
     if (this.voices[pid]) {
       this.voices[pid].osc.detune.value = cents*5
     }
-  }a
+  }
+
+  changeWave() {
+    const changeTo = this.waveform === 'triangle' ? 'sine' : 'triangle'
+    Object.keys(this.voices).forEach(pid => {
+      this.voices[pid].osc.type = changeTo
+    })
+    this.waveform = changeTo
+    this.masterGain.gain.cancelScheduledValues(this.audioContext.currentTime)
+    this.masterGain.gain.setTargetAtTime(0.0, this.audioContext.currentTime, 0.2)
+    return changeTo
+  }
 
   keyToFrequency(keyCode) {
 

@@ -1,57 +1,44 @@
-import React, { useContext, useRef, useEffect } from 'react'
-import './App.css'
-import Slider from './Slider'
+import React, { useRef } from 'react'
+import Interface from './Interface'
 import SynthContext from './SynthContext'
-import useSparkle from './useSparkle'
+import Synth from './Synth'
+
+const numberOfVoices = 16
 
 function App() {
-  const synth = useContext(SynthContext)
+  const synth = new Synth({ numberOfVoices })
+  synth.voiceGain(0, 0,5)
+
   const mainRef = useRef(null)
-  const [sparkling, setNoteOn] = useSparkle()
 
-  useEffect(() => {
-    if (synth.masterGain > 0) {
-      setNoteOn(true)
-      setTimeout(() => setNoteOn(false), 100)
-    }
-  }, [synth.masterGain])
-
-  useEffect(() => {
-    mainRef.current.focus()
-  }, [])
-
-  const handleKeyDown = ({ keyCode }) => {
-    // if (nothingPlayedYet) {
-    //   synth.voiceGain(0, 0.5)
-    //   setNothingPlayedYet(false)
-    // }
-    synth.keyboardInput(keyCode)
-    setNoteOn(true)
-  }
-
-  const handleKeyUp = () => {
-    synth.keyboardInput(synth.OFF)
-    setNoteOn(false)
+  const makeSureSynthOn = () => {
+    synth.resumeAudio()
   }
 
   return (
-    <div
-      className="App"
-      tabIndex="0"
-      ref={mainRef}
-      onKeyDown={handleKeyDown}
-      onKeyUp={handleKeyUp}
-    >
-      <div className="spectrumControls">
-        {Object.keys(synth.voices).map(pid => (
-          <Slider key={pid} pid={pid} noteOn={sparkling} />
-        ))}
-      </div>
-      <div className="hint">Double-click a slider to turn on a harmonic</div>
-      <div className="hint">Press a key from the middle row of your keyboard: ASDFGHJKL
-      </div>
+    <div style={Container} onFocus={makeSureSynthOn} ref={mainRef}>
+      <SynthContext.Provider value={synth}>
+        <Interface />
+      </SynthContext.Provider>
+      <div style={Hint}>press a key: ASDFGHJKL</div>
     </div>
   )
+}
+
+const Container = {
+  textAlign: 'center',
+  display: 'flex',
+  flexDirection: 'column',
+  padding: '50px'
+}
+
+const Hint = {
+  color: '#f49',
+  fontFamily: 'sans-serif',
+  letterSpacing: '3px',
+  fontSize: '1.8rem',
+  lineHeight: '2.15rem',
+  marginBottom: '0.25rem'
 }
 
 export default App
