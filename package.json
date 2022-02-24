@@ -4,7 +4,6 @@
   "private": true,
   "homepage": "https://colemanmoore.github.io/additive-slider-synth-2",
   "dependencies": {
-    "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.3.2",
     "@testing-library/user-event": "^7.1.2",
     "react": "^16.13.1",
